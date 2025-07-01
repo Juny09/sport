@@ -8,14 +8,14 @@
             <h2 class="manager-title">Activity Command Center</h2>
             <p class="manager-subtitle">Create, organize, and manage your team activities</p>
           </div>
-          <div class="header-actions">
+          <!-- <div class="header-actions">
             <button @click="openCreateForm" class="create-activity-btn">
               <svg class="w-4 h-4" fill="none" stroke="#000" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
               <span>New Activity</span>
             </button>
-          </div>
+          </div> -->
         </div>
 
         <!-- Stats Overview -->
@@ -134,6 +134,7 @@
         @edit="openEditForm"
         @delete="handleDelete"
         @select="handleActivitySelect"
+        @new-activity="openCreateForm"
       />
     </section>
 
@@ -388,10 +389,11 @@ export default {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+  background: linear-gradient(135deg, #121a1d, #0f0f0f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: black;
 }
 
 .manager-subtitle {
@@ -411,7 +413,7 @@ export default {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
-  color: #000;
+  color: white;
   border: none;
   border-radius: 0.75rem;
   font-weight: 600;

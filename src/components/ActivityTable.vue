@@ -1,169 +1,65 @@
 <template>
-  <div class="athletic-table-container">
-    <!-- Table Header -->
-    <div class="table-header-section">
+  <div class="activity-container">
+    <!-- Header -->
+    <div class="header">
       <div class="header-content">
-        <div class="header-info">
-          <h3 class="table-title">Activity Collection</h3>
-          <p class="table-subtitle">{{ activities.length }} activities available</p>
-        </div>
-        <div class="header-stats">
-          <div class="stat-badge">
-
-            Total : {{ activities.length }}
-          </div>
-        </div>
+        <h3 class="title">Activity Collection</h3>
+        <button @click="$emit('new-activity')" class="new-activity-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>New Activity</span>
+        </button>
       </div>
+      <p class="subtitle">{{ activities.length }} activities available</p>
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="loading-container">
-      <div class="athletic-spinner">
-        <div class="spinner-ring"></div>
-        <div class="spinner-ring delay-1"></div>
-        <div class="spinner-ring delay-2"></div>
-      </div>
-      <p class="loading-text">Loading activities...</p>
+    <div v-if="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading activities...</p>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="activities.length === 0" class="empty-state">
-      <div class="empty-icon">
-        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-        </svg>
-      </div>
-      <h4 class="empty-title">No Activities Found</h4>
-      <p class="empty-description">Start building your activity collection by creating your first activity.</p>
+    <div v-else-if="!activities.length" class="empty">
+      <p>No activities found</p>
     </div>
 
-    <!-- Activities Table -->
-    <div v-else class="table-wrapper">
-      <div class="table-scroll">
-        <table class="athletic-table">
-          <!-- Table Head -->
-          <thead class="table-head">
-            <tr>
-              <th class="table-header-cell">
-                <div class="header-cell-content">
-
-                  Activity Details
-                </div>
-              </th>
-              <th class="table-header-cell">
-                <div class="header-cell-content">
-                  Configuration
-                </div>
-              </th>
-              <th class="table-header-cell">
-                <div class="header-cell-content">
-                  Timeline
-                </div>
-              </th>
-              <th class="table-header-cell actions-column">
-                <div class="header-cell-content">
-                  Actions
-                </div>
-              </th>
-            </tr>
-          </thead>
-
-          <!-- Table Body -->
-          <tbody class="table-body">
-            <tr
-              v-for="activity in activities"
-              :key="activity.id"
-              class="table-row"
-              @click="handleSelect(activity)"
-            >
-              <!-- Activity Details -->
-              <td class="table-cell">
-                <div class="activity-info">
-                  <div class="activity-main">
-                    <h4 class="activity-name">{{ activity.name }}</h4>
-                    <p class="activity-description">
-                      {{ truncateText(activity.description, 80) }}
-                    </p>
-                  </div>
-                  <div class="activity-meta">
-                    <span class="activity-type-badge">
-                      {{ activity.meeting_type || 'General' }}
-                    </span>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Configuration -->
-              <td class="table-cell">
-                <div class="config-info">
-                  <div class="config-item">
-                    <svg class="w-3 h-3 config-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
-                    </svg>
-                    <span class="config-value">{{ activity.team_size || 'Any size' }}</span>
-                  </div>
-                  <div class="config-item">
-                    <svg class="w-3 h-3 config-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span class="config-value">{{ activity.time_required || 'Flexible' }}</span>
-                  </div>
-                  <div class="config-item">
-                    <svg class="w-3 h-3 config-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    </svg>
-                    <span class="config-value">{{ activity.location || 'Any location' }}</span>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Timeline -->
-              <td class="table-cell">
-                <div class="timeline-info">
-                  <div class="created-date">
-                    <span class="date-label">Created</span>
-                    <time class="date-value">{{ formatDateTime(activity.created_at) }}</time>
-                  </div>
-                  <div class="tips-count" v-if="activity.facilitation_tips?.length">
-
-                    {{ activity.facilitation_tips.length }} tip{{ activity.facilitation_tips.length !== 1 ? 's' : '' }}
-                  </div>
-                </div>
-              </td>
-
-              <!-- Actions -->
-              <td class="table-cell actions-cell" @click.stop>
-                <div class="action-buttons">
-                  <button
-                    @click="handleEdit(activity)"
-                    class="action-btn edit-btn"
-                    title="Edit Activity"
-                  >
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                  </button>
-                  <button
-                    @click="handleDelete(activity)"
-                    class="action-btn delete-btn"
-                    title="Delete Activity"
-                  >
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Activities List -->
+    <div v-else class="activities">
+      <div
+        v-for="activity in activities"
+        :key="activity.id"
+        class="activity-card"
+      >
+        <div class="activity-content" @click="$emit('select', activity)">
+          <h4 class="activity-title">{{ activity.name }}</h4>
+          <div v-if="activity.created_at" class="activity-date">
+            {{ formatDate(activity.created_at) }}
+          </div>
+        </div>
+        <div class="activity-actions">
+          <button class="action-btn edit" @click.stop="$emit('edit', activity)" title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="action-btn delete" @click.stop="$emit('delete', activity)" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { formatDateTime, truncateText } from '../utils/helpers.js';
+import { format } from 'date-fns';
 
 export default {
   name: 'ActivityTable',
@@ -178,752 +74,223 @@ export default {
       default: false
     }
   },
-  emits: ['edit', 'delete', 'select'],
-  setup(props, { emit }) {
-    // Event Handlers
-    const handleEdit = (activity) => {
-      emit('edit', activity);
-    };
-
-    const handleDelete = (activity) => {
-      const confirmed = confirm(
-        `Are you sure you want to delete "${activity.name}"?\n\nThis action cannot be undone.`
-      );
-
-      if (confirmed) {
-        emit('delete', activity.id);
+  emits: ['select', 'edit', 'delete', 'new-activity'],
+  methods: {
+    formatDate(dateString) {
+      if (!dateString) return '';
+      try {
+        return format(new Date(dateString), 'MMM d, yyyy');
+      } catch {
+        return '';
       }
-    };
-
-    const handleSelect = (activity) => {
-      emit('select', activity);
-    };
-
-    return {
-      // Event handlers
-      handleEdit,
-      handleDelete,
-      handleSelect,
-
-      // Utility functions
-      formatDateTime,
-      truncateText
-    };
+    }
   }
 };
 </script>
 
 <style scoped>
-/* ============================================
-   ACTIVITYTABLE.VUE - TABLE COMPONENT STYLES
-   Modern, responsive table with glassmorphic design
-============================================ */
-
-/* Base Table Container */
-.athletic-table-container {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: all var(--transition-normal);
-}
-
-/* Table Header Section */
-.table-header-section {
-  padding: 1rem;
-  background: linear-gradient(to right, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.header-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .header-content {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-.header-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.header-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #000;
-}
-
-/* Table Styles */
-.athletic-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table-head {
-  background-color: rgba(59, 130, 246, 0.05);
-}
-
-.table-header-cell {
-  padding: 1rem 1.5rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.table-body {
-  background: transparent;
-  background-color: rgba(255, 255, 255, 0.02);
-}
-
-.table-row {
-  transition: all 0.2s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.table-row:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.table-cell {
-  padding: 1rem 1.5rem;
-  font-size: 0.875rem;
-  color: #000;
-  vertical-align: middle;
-}
-
-/* Activity Info */
-.activity-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .activity-info {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-}
-
-.activity-main {
-  flex: 1;
-}
-
-.activity-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 0.25rem;
-}
-
-.activity-description {
-  font-size: 0.875rem;
-  color: #333;
-  line-height: 1.5;
-}
-
-/* Configuration Info */
-.config-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.config-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.config-icon {
-  color: #000;
-  flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-}
-
-.config-value {
-  color: #000;
-}
-
-/* Timeline Info */
-.timeline-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.date-label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.date-value {
-  font-size: 0.875rem;
-  color: #000;
-}
-
-/* Action Buttons */
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-.action-btn {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 1px solid transparent;
-}
-
-.action-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.action-btn svg {
-  width: 1rem;
-  height: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.action-btn:hover svg {
-  transform: scale(1.1);
-}
-
-.edit-btn {
-  color: #000;
-  background: rgba(59, 130, 246, 0.1);
-}
-
-.edit-btn:hover {
-  background: var(--primary-500);
-  color: white;
-}
-
-.delete-btn {
-  color: #000;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.delete-btn:hover {
-  background: var(--error-500);
-  color: white;
-}
-
-/* Badges */
-.activity-type-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--accent-500);
-  color: white;
-  white-space: nowrap;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .table-header-cell,
-  .table-cell {
-    padding: 0.75rem 1rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .activity-info {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .table-header-section {
-    padding: 0.75rem;
-  }
-}
-
-/* Loading and Empty States */
-.empty-state {
-  padding: 3rem 1rem;
-  text-align: center;
-  color: #333;
-}
-
-.loading-spinner {
-  width: 2rem;
-  height: 2rem;
-  border: 0.25rem solid var(--primary-500);
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.activity-container {
+  max-width: 100%;
   margin: 0 auto;
+  padding: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-/* Table Container */
-.athletic-table-container {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* Table Header Section */
-.table-header-section {
-  padding: var(--space-6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
+/* Header */
+.header {
+  margin-bottom: 1.5rem;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-4);
+  margin-bottom: 0.5rem;
 }
 
-.header-info {
-  flex: 1;
-}
-
-.table-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: var(--space-1);
-}
-
-.table-subtitle {
-  color: #333;
-  font-size: 0.875rem;
-}
-
-.header-stats {
-  display: flex;
-  gap: var(--space-3);
-}
-
-.stat-badge {
-  display: flex;
+.new-activity-btn {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  background: var(--primary-600);
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #3182ce;
   color: white;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-lg);
+  border: none;
+  border-radius: 0.375rem;
   font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-activity-btn:hover {
+  background: #2c5282;
+  transform: translateY(-1px);
+}
+
+.new-activity-btn svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 3;
+}
+
+.title {
+  font-size: 1.5rem;
   font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin: 0;
 }
 
 /* Loading State */
-.loading-container {
+.loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-16);
-  text-align: center;
+  padding: 2rem;
+  color: #4a5568;
 }
 
-.athletic-spinner {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  margin-bottom: var(--space-4);
-  filter: drop-shadow(0 0 6px var(--primary-500));
-}
-
-.spinner-ring {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 3px solid transparent;
-  border-top: 3px solid var(--primary-500);
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e2e8f0;
+  border-top-color: #3182ce;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-
-.spinner-ring.delay-1 {
-  animation-delay: 0.1s;
-  border-top-color: #000;
-}
-
-.spinner-ring.delay-2 {
-  animation-delay: 0.2s;
-  border-top-color: var(--success-500);
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-.loading-text {
-  color: #000;
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
+/* Empty State */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  font-size: 0.95rem;
 }
 
-/* Empty State */
-.empty-state {
+/* Activities List */
+.activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Activity Card */
+.activity-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-16);
-  text-align: center;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(14, 165, 233, 0.05) 0%,
-    transparent 70%
-  );
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
 }
 
-.empty-icon {
-  color: #333;
-  margin-bottom: var(--space-6);
-  opacity: 0.7;
+.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.empty-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: var(--space-3);
-}
-
-.empty-description {
-  color: #333;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-/* Table Wrapper */
-.table-wrapper {
-  overflow-x: auto;
-}
-
-.table-scroll {
-  overflow-x: auto;
-}
-
-/* Athletic Table */
-.athletic-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}
-
-/* Table Head */
-.table-head {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.table-header-cell {
-  padding: var(--space-4) var(--space-6);
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 600;
-  color: #000;
-  white-space: nowrap;
-}
-
-.header-cell-content {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.actions-column {
-  text-align: center;
-}
-
-/* Table Body */
-.table-body {
-  background: transparent;
-}
-
-.table-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all var(--transition-normal);
+.activity-content {
+  padding: 1.25rem;
+  flex-grow: 1;
   cursor: pointer;
 }
 
-.table-row:hover {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(25px);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.table-cell {
-  padding: var(--space-4) var(--space-6);
-  vertical-align: top;
-  color: #000;
-}
-
-/* Activity Info */
-.activity-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--space-3);
-}
-
-.activity-main {
-  flex: 1;
-}
-
-.activity-name {
-  font-weight: 600;
-  color: #000;
-  margin-bottom: var(--space-1);
+.activity-title {
   font-size: 1rem;
-}
-
-.activity-description {
-  color: #333;
-  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 0.5rem;
   line-height: 1.4;
 }
 
-.activity-meta {
-  flex-shrink: 0;
-}
-
-.activity-type-badge {
-  background: var(--accent-600);
-  color: white;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-/* Configuration Info */
-.config-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.config-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.config-icon {
-  color: #000;
-  flex-shrink: 0;
-}
-
-.config-value {
-  color: #000;
-  font-size: 0.875rem;
-}
-
-/* Timeline Info */
-.timeline-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.created-date {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.date-label {
-  font-size: 0.75rem;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.date-value {
-  color: #000;
-  font-size: 0.875rem;
-}
-
-.tips-count {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: #000;
-  font-size: 0.75rem;
-  font-weight: 600;
+.activity-date {
+  font-size: 0.8rem;
+  color: #718096;
 }
 
 /* Action Buttons */
-.actions-cell {
-  text-align: center;
-}
-
-.action-buttons {
+.activity-actions {
   display: flex;
-  gap: var(--space-2);
-  justify-content: center;
+  border-top: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding: 0.5rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .action-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-md);
-  padding: var(--space-2);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  background: transparent;
 }
 
 .action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
 
 .action-btn svg {
-  transition: transform var(--transition-fast);
+  width: 1rem;
+  height: 1rem;
 }
 
-.action-btn:hover svg {
-  transform: scale(1.1);
+.edit {
+  color: #3182ce;
 }
 
-.edit-btn {
-  color: #000;
-  border-color: var(--primary-400);
+.edit:hover {
+  background-color: #ebf8ff;
 }
 
-.edit-btn:hover {
-  background: var(--primary-600);
-  color: white;
+.delete {
+  color: #e53e3e;
 }
 
-.delete-btn {
-  color: #000;
-  border-color: var(--error-400);
-}
-
-.delete-btn:hover {
-  background: var(--error-600);
-  color: white;
+.delete:hover {
+  background-color: #fff5f5;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .table-responsive {
-    overflow-x: auto;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
+@media (max-width: 640px) {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  .table-header-section {
-    padding: var(--space-4);
+    gap: 0.75rem;
   }
 
-  .table-cell,
-  .table-header-cell {
-    padding: var(--space-3) var(--space-4);
+  .new-activity-btn {
+    width: 100%;
+    justify-content: center;
   }
 
-  .activity-info {
-    flex-direction: column;
-    gap: var(--space-2);
+  .activities {
+    grid-template-columns: 1fr;
   }
 
-  .activity-meta {
-    align-self: flex-start;
-  }
-}
-
-/* Enhanced Modern Styles */
-.athletic-table-container {
-  box-shadow:
-    0 8px 32px 0 rgba(31, 38, 135, 0.37),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-}
-
-.table-head {
-  background: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.table-header-cell {
-  padding: var(--space-4) var(--space-6);
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 600;
-  color: #000;
-  white-space: nowrap;
-}
-
-.actions-column {
-  text-align: center;
-}
-
-/* Responsive Design adjustments */
-@media (max-width: 480px) {
-  .activity-meta {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .table-header-section {
-    padding: 0.75rem;
-  }
-
-  .table-cell,
-  .table-header-cell {
-    padding: 0.75rem 1rem;
+  .activity-card {
+    margin: 0 0.5rem;
   }
 }
 </style>
+

@@ -1,37 +1,37 @@
 <template>
-  <div class="min-h-screen">
+  <div class="app-container">
     <!-- Hero Background -->
     <div class="hero-background"></div>
 
     <!-- Connection Status Banner -->
     <div v-if="connectionStatus === 'connecting'" class="connection-banner connecting">
-      <div class="flex items-center justify-center">
-        <div class="loading-spinner mr-3">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+      <div class="banner-content">
+        <div class="loading-spinner">
+          <svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
         </div>
-        <div>
-          <p class="font-semibold">Connecting to database...</p>
-          <p class="text-sm opacity-75">Please wait while we establish connection</p>
+        <div class="banner-text">
+          <p class="banner-title">Connecting to database...</p>
+          <p class="banner-subtitle">Please wait while we establish connection</p>
         </div>
       </div>
     </div>
 
     <div v-else-if="connectionStatus === 'failed'" class="connection-banner failed">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+      <div class="banner-content">
+        <div class="banner-icon-text">
+          <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
           </svg>
-          <div>
-            <p class="font-semibold">Failed to connect to database</p>
-            <p class="text-sm opacity-75">Please check your Supabase configuration and try again</p>
+          <div class="banner-text">
+            <p class="banner-title">Failed to connect to database</p>
+            <p class="banner-subtitle">Please check your Supabase configuration and try again</p>
           </div>
         </div>
-        <button @click="retryConnection" class="btn-secondary">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button @click="retryConnection" class="retry-btn">
+          <svg class="retry-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
           </svg>
           Retry
@@ -40,11 +40,11 @@
     </div>
 
     <!-- Main Content -->
-    <div v-if="connectionStatus === 'connected'" class="container mx-auto px-4 py-8 relative z-10">
+    <div v-if="connectionStatus === 'connected'" class="main-container">
       <!-- Enhanced Header -->
-      <header class="text-center mb-12 animate-in">
+      <header class="hero-header">
         <div class="hero-content">
-          <h1 class="hero-title gradient-text">Sports Activity Management</h1>
+          <h1 class="hero-title">Sports Activity Management</h1>
           <p class="hero-subtitle">
             Organize, track, and manage your team's sports events and player registrations
           </p>
@@ -63,25 +63,25 @@
       </header>
 
       <!-- Featured Sports -->
-      <section class="featured-sports mb-12 animate-in">
-        <h2 class="text-2xl font-bold text-black text-center mb-4">Popular Sports</h2>
-        <div class="flex flex-wrap justify-center gap-4">
+      <!-- <section class="featured-sports">
+        <h2 class="section-title">Popular Sports</h2>
+        <div class="sports-grid">
           <div class="sport-card">⚽ Football</div>
           <div class="sport-card">🏀 Basketball</div>
           <div class="sport-card">🏸 Badminton</div>
           <div class="sport-card">🏓 Table Tennis</div>
           <div class="sport-card">🏐 Volleyball</div>
         </div>
-      </section>
+      </section> -->
 
       <!-- Tab Content -->
       <main class="tab-content">
         <transition name="fade" mode="out-in">
-          <div v-if="currentTab === 'activities'" key="activities" class="animate-in">
+          <div v-if="currentTab === 'activities'" key="activities" class="tab-panel">
             <ActivityManager @activity-selected="handleActivitySelected" />
           </div>
 
-          <div v-else-if="currentTab === 'registrations'" key="registrations" class="animate-in">
+          <div v-else-if="currentTab === 'registrations'" key="registrations" class="tab-panel">
             <RegistrationManager :selected-activity="selectedActivity" />
           </div>
         </transition>
@@ -262,13 +262,13 @@ export default {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 900;
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #38bdf8, #fb923c);
+  background: linear-gradient(135deg, #121a1d, #0f0f0f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1.2;
   text-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-  color: #050505;
+
 }
 
 .gradient-text {
@@ -518,24 +518,144 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* ============================================
+   Mobile Responsive Styles
+   - iPhone (320px-428px)
+   - Samsung (360px-412px)
+   - Vivo (360px-412px)
+   - Honor (360px-412px)
+============================================ */
+
+/* Base mobile styles (applies to all mobile devices) */
+@media (max-width: 767px) {
   .container {
     padding: 0 0.75rem;
   }
 
+  /* Hero Section */
+  .hero-content {
+    padding: 1.5rem 0;
+  }
+
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .hero-stats {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat-item {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
   }
 
   .stat-divider {
-    width: 40px;
+    width: 100%;
     height: 1px;
-    transform: rotate(90deg);
+    transform: none;
+    margin: 0.25rem 0;
+  }
+
+  /* Featured Sports */
+  .sports-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .sport-card {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  /* Connection Banner */
+  .connection-banner {
+    margin: 0 -0.75rem 1rem;
+    border-radius: 0;
+  }
+
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .banner-icon-text {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .banner-text {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Small Mobile Devices (iPhone SE, Samsung Galaxy Fold, etc.) */
+@media (max-width: 374px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Medium Mobile Devices (Most modern phones) */
+@media (min-width: 375px) and (max-width: 428px) {
+  /* iPhone 12/13/14 Pro Max, Plus models */
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+/* Large Mobile Devices (Phablets) */
+@media (min-width: 429px) and (max-width: 767px) {
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    width: auto;
+    padding: 0 1rem;
+  }
+
+  .stat-divider {
+    display: none;
   }
 }
 </style>
@@ -623,4 +743,123 @@ body {
   --transition-fast: 0.15s ease-out;
   --transition-normal: 0.25s ease-out;
 }
+
+/* =============
+   Responsive
+============== */
+/* ============================================
+   Tablet Responsive Styles (768px - 1024px)
+   - iPad Mini, iPad Air, etc.
+============================================ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-content {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .stat-item {
+    min-width: 120px;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  .sports-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .sport-card {
+    width: 100%;
+    max-width: none;
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  .tab-content {
+    padding: 0 1rem;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+/* ============================================
+   Small Mobile Landscape & Special Cases
+   - For landscape mode on small devices
+============================================ */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero-content {
+    padding: 1rem 0;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stat-item {
+    min-width: 100px;
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+
+  /* Adjust for Samsung Fold's inner display */
+  @media (width: 717px) and (height: 539px) {
+    .hero-title {
+      font-size: 1.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+}
+
 </style>
