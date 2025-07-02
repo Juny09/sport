@@ -66,7 +66,7 @@
 
           <!-- Description -->
           <div class="form-group full-width">
-            <label class="form-label required">
+            <label class="form-label">
               Description
             </label>
             <textarea

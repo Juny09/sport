@@ -138,7 +138,7 @@
       />
     </section>
 
-    <!-- Enhanced Modal -->
+    <!-- Enhanced Modal for Create/Edit -->
     <teleport to="body">
       <transition name="modal" appear>
         <div v-if="showForm" class="modal-overlay" @click="closeForm">
@@ -165,6 +165,63 @@
         </div>
       </transition>
     </teleport>
+
+    <!-- Delete Confirmation Modal -->
+    <teleport to="body">
+      <transition name="modal" appear>
+        <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
+          <div class="delete-modal-container" @click.stop>
+            <div class="delete-modal-header">
+              <div class="delete-icon">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+              </div>
+              <h3 class="delete-modal-title">Delete Activity</h3>
+              <button @click="closeDeleteModal" class="modal-close-btn">
+                <svg class="w-5 h-5" fill="none" stroke="#000" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="delete-modal-content">
+              <p class="delete-message">
+                Are you sure you want to delete
+                <strong>"{{ activityToDelete?.name || 'this activity' }}"</strong>?
+              </p>
+              <p class="delete-warning">
+                This action cannot be undone. All data associated with this activity will be permanently removed.
+              </p>
+            </div>
+
+            <div class="delete-modal-footer">
+              <button
+                @click="closeDeleteModal"
+                class="cancel-btn"
+                :disabled="isDeleting"
+              >
+                Cancel
+              </button>
+              <button
+                @click="confirmDelete"
+                class="delete-btn"
+                :disabled="isDeleting"
+              >
+                <svg v-if="isDeleting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                {{ isDeleting ? 'Deleting...' : 'Delete Activity' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </teleport>
   </div>
 </template>
 
@@ -182,7 +239,7 @@ export default {
     ActivityForm
   },
   emits: ['activity-selected'],
-  setup(props, { emit }) {
+  setup() {
     // Composables
     const {
       activities,
@@ -200,6 +257,11 @@ export default {
     const editingActivity = ref(null);
     const searchQuery = ref('');
     const isEdit = ref(false);
+
+    // Delete-related state
+    const showDeleteModal = ref(false);
+    const activityToDelete = ref(null);
+    const isDeleting = ref(false);
 
     // Computed properties
     const activeActivities = computed(() => {
@@ -245,7 +307,7 @@ export default {
     };
 
     const openEditForm = (activity) => {
-      editingActivity.value = { ...activity }; // Create a copy to avoid mutations
+      editingActivity.value = { ...activity };
       isEdit.value = true;
       showForm.value = true;
     };
@@ -273,28 +335,51 @@ export default {
         }
       } catch (err) {
         console.error('Failed to save activity:', err);
-        // You could add a notification system here
       }
     };
 
-    const handleDelete = async (id) => {
-      try {
-        await deleteActivity(id);
+    const handleActivitySelect = (activity) => {
+      // Emit event to parent component if needed
+      console.log('Activity selected:', activity);
+    };
 
-        // Refresh the current view
+    // Delete functions
+    const handleDelete = (activity) => {
+      activityToDelete.value = activity;
+      showDeleteModal.value = true;
+    };
+
+    const confirmDelete = async () => {
+      if (!activityToDelete.value) return;
+
+      isDeleting.value = true;
+      try {
+        await deleteActivity(activityToDelete.value.id);
+
+        // Refresh the current view after successful deletion
         if (searchQuery.value) {
           await searchActivities(searchQuery.value);
         } else {
           await loadActivities();
         }
+
+        // Show success message (optional)
+        console.log('Activity deleted successfully');
+
+        // Close modal
+        closeDeleteModal();
       } catch (err) {
         console.error('Failed to delete activity:', err);
-        // You could add a notification system here
+        // You might want to show an error toast/notification here
+      } finally {
+        isDeleting.value = false;
       }
     };
 
-    const handleActivitySelect = (activity) => {
-      emit('activity-selected', activity);
+    const closeDeleteModal = () => {
+      showDeleteModal.value = false;
+      activityToDelete.value = null;
+      isDeleting.value = false;
     };
 
     const handleRetry = async () => {
@@ -328,6 +413,11 @@ export default {
       searchQuery,
       isEdit,
 
+      // Delete-related state
+      showDeleteModal,
+      activityToDelete,
+      isDeleting,
+
       // Computed
       activeActivities,
       filteredActivities,
@@ -337,8 +427,13 @@ export default {
       openEditForm,
       closeForm,
       handleFormSubmit,
-      handleDelete,
       handleActivitySelect,
+
+      // Delete methods
+      handleDelete,
+      confirmDelete,
+      closeDeleteModal,
+
       handleSearch,
       clearSearch,
       handleRetry
@@ -358,7 +453,6 @@ export default {
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   padding: 2rem 1rem;
   color: #000;
-
 }
 
 /* ============================================
@@ -777,6 +871,146 @@ export default {
 }
 
 /* ============================================
+   DELETE MODAL STYLES
+============================================ */
+.delete-modal-container {
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2rem 1rem 2rem;
+  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+}
+
+.delete-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.delete-modal-title {
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #dc2626;
+  margin: 0;
+}
+
+.delete-modal-content {
+  padding: 2rem;
+}
+
+.delete-message {
+  font-size: 1.125rem;
+  color: #374151;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.delete-message strong {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.delete-warning {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  padding: 1rem;
+  background: #fef3cd;
+  border: 1px solid #fde047;
+  border-radius: 0.75rem;
+}
+
+.delete-modal-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem 2rem 2rem;
+  justify-content: flex-end;
+  background: #f8fafc;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
    MODAL TRANSITIONS
 ============================================ */
 .modal-enter-active,
@@ -862,6 +1096,30 @@ export default {
   .modal-title {
     font-size: 1.25rem;
   }
+
+  .delete-modal-container {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .delete-modal-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .delete-modal-content {
+    padding: 1.5rem;
+  }
+
+  .delete-modal-footer {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .delete-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -887,4 +1145,3 @@ export default {
   }
 }
 </style>
-
