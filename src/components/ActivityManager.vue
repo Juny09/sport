@@ -358,6 +358,7 @@ export default {
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   padding: 2rem 1rem;
   color: #000;
+
 }
 
 /* ============================================

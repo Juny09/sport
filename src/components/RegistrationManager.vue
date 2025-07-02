@@ -1,5 +1,5 @@
 <template>
-  <div class="registration-manager">
+  <!-- <div class="registration-manager"> -->
     <!-- Back Button - Moved to better position -->
     <div class="navigation-section">
       <button @click="goToHome" class="back-button">
@@ -123,7 +123,7 @@
         </div>
       </div>
     </teleport>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -310,11 +310,14 @@ export default {
   padding: 1.5rem;
   background: #f8fafc;
   min-height: 100vh;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 /* Navigation Section - New container for back button */
 .navigation-section {
   margin-bottom: 1.5rem;
+
 }
 
 /* Back Button - Improved styling */

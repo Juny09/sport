@@ -3,64 +3,66 @@
     <!-- Hero Background -->
     <div class="hero-background"></div>
 
-    <!-- Connection Status Banner -->
-    <div v-if="connectionStatus === 'connecting'" class="connection-banner connecting">
-      <div class="banner-content">
-        <div class="loading-spinner">
-          <svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </div>
-        <div class="banner-text">
-          <p class="banner-title">Connecting to database...</p>
-          <p class="banner-subtitle">Please wait while we establish connection</p>
-        </div>
-      </div>
-    </div>
-
-    <div v-else-if="connectionStatus === 'failed'" class="connection-banner failed">
-      <div class="banner-content">
-        <div class="banner-icon-text">
-          <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-          </svg>
-          <div class="banner-text">
-            <p class="banner-title">Failed to connect to database</p>
-            <p class="banner-subtitle">Please check your Supabase configuration and try again</p>
-          </div>
-        </div>
-        <button @click="retryConnection" class="retry-btn">
-          <svg class="retry-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-          </svg>
-          Retry
-        </button>
-      </div>
-    </div>
-
     <!-- Main Content -->
-    <div v-if="connectionStatus === 'connected'" class="main-container">
-      <!-- Enhanced Header -->
-      <header class="hero-header">
-        <div class="hero-content">
-          <h1 class="hero-title">Sports Activity Management</h1>
-          <p class="hero-subtitle">
-            Organize, track, and manage your team's sports events and player registrations
-          </p>
-          <div class="hero-stats">
-            <div class="stat-item">
-              <div class="stat-number">🏆 {{ totalActivities }}</div>
-              <div class="stat-label">Sports Events</div>
+    <div class="main-container">
+      <div v-if="!selectedActivity">
+        <!-- Connection Status Banner - Only show on activities page -->
+        <div v-if="connectionStatus === 'connecting'" class="connection-banner connecting">
+          <div class="banner-content">
+            <div class="loading-spinner">
+              <svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
             </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <div class="stat-number">👟 {{ totalRegistrations }}</div>
-              <div class="stat-label">Players Registered</div>
+            <div class="banner-text">
+              <p class="banner-title">Connecting to database...</p>
+              <p class="banner-subtitle">Please wait while we establish connection</p>
             </div>
           </div>
         </div>
-      </header>
+
+        <div v-else-if="connectionStatus === 'failed'" class="connection-banner failed">
+          <div class="banner-content">
+            <div class="banner-icon-text">
+              <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+              </svg>
+              <div class="banner-text">
+                <p class="banner-title">Failed to connect to database</p>
+                <p class="banner-subtitle">Please check your Supabase configuration and try again</p>
+              </div>
+            </div>
+            <button @click="retryConnection" class="retry-btn">
+              <svg class="retry-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Retry
+            </button>
+          </div>
+        </div>
+
+        <!-- Header - Only show on activities page -->
+        <header class="hero-header">
+          <div class="hero-content">
+            <h1 class="hero-title">Sports Activity Management</h1>
+            <p class="hero-subtitle">
+              Organize, track, and manage your team's sports events and player registrations
+            </p>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <div class="stat-number">🏆 {{ totalActivities }}</div>
+                <div class="stat-label">Sports Events</div>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <div class="stat-number">👟 {{ totalRegistrations }}</div>
+                <div class="stat-label">Players Registered</div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
 
       <!-- Featured Sports -->
       <!-- <section class="featured-sports">
@@ -74,17 +76,22 @@
         </div>
       </section> -->
 
-      <!-- Tab Content -->
-      <main class="tab-content">
-        <transition name="fade" mode="out-in">
-          <div v-if="currentTab === 'activities'" key="activities" class="tab-panel">
-            <ActivityManager @activity-selected="handleActivitySelected" />
-          </div>
+      <!-- Main Content -->
+      <main class="main-content">
+        <div v-if="connectionStatus === 'connected' && !selectedActivity" class="activities-view">
+          <ActivityManager @activity-selected="handleActivitySelected" />
+        </div>
 
-          <div v-else-if="currentTab === 'registrations'" key="registrations" class="tab-panel">
-            <RegistrationManager :selected-activity="selectedActivity" />
+        <div v-else-if="selectedActivity" class="registration-view">
+          <RegistrationManager :selected-activity="selectedActivity" />
+        </div>
+
+        <div v-else class="loading-screen">
+          <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Loading activities...</p>
           </div>
-        </transition>
+        </div>
       </main>
     </div>
   </div>
@@ -174,11 +181,13 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,
+  /* background: linear-gradient(135deg,
     #6f8dd1 0%,
     #7badf3 30%,
     #ffffff 70%,
-    #e4baac 100%);
+    #e4baac 100%); */
+  background: whitesmoke;
+
   opacity: 0.95;
   z-index: -1;
 }
@@ -204,10 +213,50 @@ export default {
 }
 
 /* Container */
-.container {
+.main-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-top: 2rem;
+}
+
+.activities-view, .registration-view {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Connection Status Banners */
