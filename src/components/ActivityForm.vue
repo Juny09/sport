@@ -2,7 +2,7 @@
   <div class="activity-form-container">
     <!-- Form Header -->
     <div class="form-header">
-      <div class="form-header-content">
+      <!-- <div class="form-header-content">
         <div class="form-icon">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -12,8 +12,8 @@
           <h3 class="form-title">{{ isEdit ? 'Edit Activity' : 'Create New Activity' }}</h3>
           <p class="form-subtitle">{{ isEdit ? 'Update activity details and settings' : 'Build an engaging team activity from scratch' }}</p>
         </div>
-      </div>
-      <div class="form-progress">
+      </div> -->
+      <!-- <div class="form-progress">
         <div class="progress-indicator">
           <div class="progress-step" :class="{ active: currentStep >= 1 }">1</div>
           <div class="progress-line" :class="{ active: currentStep >= 2 }"></div>
@@ -26,7 +26,7 @@
           <span class="progress-label" :class="{ active: currentStep >= 2 }">Configuration</span>
           <span class="progress-label" :class="{ active: currentStep >= 3 }">Tips & Review</span>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Form Content -->
@@ -35,7 +35,7 @@
       <div v-show="currentStep === 1" class="form-step" data-step="1">
         <div class="step-header">
           <h4 class="step-title">Basic Information</h4>
-          <p class="step-description">Define the core details of your activity</p>
+          <!-- <p class="step-description">Define the core details of your activity</p> -->
         </div>
 
         <div class="form-grid">
