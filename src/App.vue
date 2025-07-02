@@ -352,6 +352,7 @@ export default {
 }
 
 .hero-title {
+  padding-top: 700px;
   font-size: clamp(2.5rem, 8vw, 8rem); /* 响应式字体大小 */
   font-weight: 900;
   margin-bottom: clamp(1.5rem, 4vw, 3rem);
