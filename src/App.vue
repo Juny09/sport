@@ -6,18 +6,20 @@
     <!-- Main Content -->
     <div class="main-container">
       <div v-if="!selectedActivity">
-        <!-- Connection Status Banner - Only show on activities page -->
+        <!-- Connection Status Banner -->
         <div v-if="connectionStatus === 'connecting'" class="connection-banner connecting">
           <div class="banner-content">
-            <div class="loading-spinner">
-              <svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </div>
-            <div class="banner-text">
-              <p class="banner-title">Connecting to database...</p>
-              <p class="banner-subtitle">Please wait while we establish connection</p>
+            <div class="banner-icon-text">
+              <div class="loading-spinner">
+                <svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+              <div class="banner-text">
+                <p class="banner-title">Connecting to database...</p>
+                <p class="banner-subtitle">Please wait while we establish connection</p>
+              </div>
             </div>
           </div>
         </div>
@@ -42,12 +44,12 @@
           </div>
         </div>
 
-        <!-- Header - Only show on activities page -->
+        <!-- Header -->
         <header class="hero-header">
           <div class="hero-content">
             <h1 class="hero-title">Sports Activity Management</h1>
             <p class="hero-subtitle">
-              Organize, track, and manage your team's sports events and player registrations
+              Organize, track, and manage your team's sports events and player registrations with our comprehensive platform
             </p>
             <div class="hero-stats">
               <div class="stat-item">
@@ -63,18 +65,6 @@
           </div>
         </header>
       </div>
-
-      <!-- Featured Sports -->
-      <!-- <section class="featured-sports">
-        <h2 class="section-title">Popular Sports</h2>
-        <div class="sports-grid">
-          <div class="sport-card">⚽ Football</div>
-          <div class="sport-card">🏀 Basketball</div>
-          <div class="sport-card">🏸 Badminton</div>
-          <div class="sport-card">🏓 Table Tennis</div>
-          <div class="sport-card">🏐 Volleyball</div>
-        </div>
-      </section> -->
 
       <!-- Main Content -->
       <main class="main-content">
@@ -165,47 +155,46 @@ export default {
 
 <style scoped>
 /* ============================================
-   APP.VUE - SCOPED STYLES (不影响其他页面)
+   全屏覆盖设计
 ============================================ */
 
-/* 局部变量 - 只在这个组件内生效 */
-.min-h-screen {
+.app-container {
   min-height: 100vh;
-  /* 移除全局背景设置，让其他页面自由设置背景 */
+  width: 100vw; /* 使用视口宽度 */
+  position: relative;
+  overflow-x: hidden; /* 防止水平滚动 */
 }
 
-  /* Page Background */
+/* 页面背景 - 全屏覆盖 */
 .hero-background {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: #f8f9fa;  /* Light gray background */
+  width: 100vw; /* 视口宽度 */
+  height: 100vh; /* 视口高度 */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   z-index: -1;
 }
 
-/* Remove the animated gradient overlay */
-
-@keyframes backgroundPulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.05); }
-}
-
-/* Container */
+/* 主容器 - 全宽度设计 */
 .main-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  width: 100%; /* 完全占满宽度 */
+  max-width: none; /* 移除最大宽度限制 */
+  margin: 0; /* 移除居中边距 */
+  padding: 2rem 5vw; /* 使用视口单位的内边距 */
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .main-content {
   margin-top: 2rem;
+  width: 100%;
 }
 
-.activities-view, .registration-view {
+.activities-view,
+.registration-view {
   animation: fadeIn 0.3s ease-in-out;
+  width: 100%;
 }
 
 @keyframes fadeIn {
@@ -217,19 +206,26 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 50vh;
+  min-height: 60vh;
+  width: 100%;
 }
 
 .loading-content {
   text-align: center;
 }
 
+.loading-content p {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: #666;
+  margin-top: 1rem;
+}
+
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   border-top: 4px solid #3498db;
-  width: 40px;
-  height: 40px;
+  width: clamp(40px, 5vw, 80px);
+  height: clamp(40px, 5vw, 80px);
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
 }
@@ -239,35 +235,95 @@ export default {
   100% { transform: rotate(360deg); }
 }
 
-/* Connection Status Banners */
+/* Connection Status Banners - 全宽度 */
 .connection-banner {
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 0.5rem;
+  width: calc(100% + 10vw); /* 超出容器边界 */
+  margin: 0 -5vw 2rem -5vw; /* 负边距扩展到屏幕边缘 */
+  padding: clamp(1rem, 3vw, 2.5rem) 5vw;
   backdrop-filter: blur(10px);
-  border: 1px solid;
+  border: none; /* 移除边框 */
   animation: slideInFromTop 0.5s ease-out;
+  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .connection-banner.connecting {
   background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
-  border-color: #0284c7;
   color: #e0f2fe;
 }
 
 .connection-banner.failed {
   background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-  border-color: #f87171;
   color: white;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.banner-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loading-spinner,
+.error-icon {
+  width: clamp(20px, 3vw, 32px);
+  height: clamp(20px, 3vw, 32px);
+  flex-shrink: 0;
 }
 
 .loading-spinner {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.banner-text {
+  flex: 1;
+}
+
+.banner-title {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.banner-subtitle {
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(1.5rem, 3vw, 2.5rem);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 500;
+}
+
+.retry-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.retry-icon {
+  width: clamp(16px, 2.5vw, 24px);
+  height: clamp(16px, 2.5vw, 24px);
 }
 
 @keyframes slideInFromTop {
@@ -281,441 +337,238 @@ export default {
   }
 }
 
-/* Hero Section */
+/* Hero Section - 全宽度设计 */
+.hero-header {
+  width: 100%;
+  margin: 0;
+}
+
 .hero-content {
   text-align: center;
-  padding: 3rem 0;
+  padding: clamp(3rem, 8vw, 8rem) 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 8vw, 8rem); /* 响应式字体大小 */
   font-weight: 900;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
   background: linear-gradient(135deg, #121a1d, #0f0f0f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.2;
-  text-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #141414, #181716);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.1;
+  text-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+  letter-spacing: -0.02em;
+  width: 100%;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  color: #050505;
-  margin-bottom: 2rem;
-  max-width: 600px;
+  font-size: clamp(1rem, 3vw, 2rem); /* 响应式字体大小 */
+  color: #374151;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  max-width: 90%; /* 使用百分比而不是固定值 */
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 .hero-stats {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(2rem, 6vw, 6rem); /* 响应式间距 */
   flex-wrap: wrap;
+  margin-top: 2rem;
+  width: 100%;
 }
 
 .stat-item {
   text-align: center;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  transition: transform 0.3s ease;
+  flex: 0 1 auto;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
 }
 
 .stat-number {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: clamp(1.5rem, 5vw, 4rem); /* 响应式字体大小 */
+  font-weight: 800;
   color: #fb923c;
-  margin-bottom: 0.25rem;
-  text-shadow: 0 0 10px currentColor;
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+  text-shadow: 0 0 15px currentColor;
+  display: block;
+  line-height: 1.2;
 }
 
 .stat-label {
-  font-size: 0.875rem;
-  color: black;
+  font-size: clamp(0.8rem, 2vw, 1.3rem); /* 响应式字体大小 */
+  color: #374151;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .stat-divider {
   width: 1px;
-  height: 40px;
-  background: #475569;
+  height: clamp(40px, 8vw, 100px); /* 响应式高度 */
+  background: linear-gradient(to bottom, transparent, #475569, transparent);
+  flex-shrink: 0;
 }
 
-/* Featured Sports */
-.featured-sports {
-  text-align: center;
-  padding: 2rem 0;
-}
-
-.sport-card {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 1rem;
-  color: black;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease-out;
-  cursor: pointer;
-}
-
-.sport-card:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #38bdf8;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  backdrop-filter: blur(25px);
-}
-
-/* Tab Content */
-.tab-content {
-  position: relative;
-}
-
-.animate-in {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Fade transition for tab content */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Utility classes - 只在这个组件内生效 */
-.flex {
-  display: flex;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-2xl {
-  font-size: 1.5rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-black {
-  color: black;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
-}
-
-.mr-3 {
-  margin-right: 0.75rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-.w-5 {
-  width: 1.25rem;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.w-4 {
-  width: 1rem;
-}
-
-.h-5 {
-  height: 1.25rem;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.h-4 {
-  height: 1rem;
-}
-
-.relative {
-  position: relative;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.opacity-25 {
-  opacity: 0.25;
-}
-
-.opacity-75 {
-  opacity: 0.75;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Button styling */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.5rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease-out;
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #38bdf8;
-}
-
-/* Responsive Design */
 /* ============================================
-   Mobile Responsive Styles
-   - iPhone (320px-428px)
-   - Samsung (360px-412px)
-   - Vivo (360px-412px)
-   - Honor (360px-412px)
+   响应式设计优化
 ============================================ */
 
-/* Base mobile styles (applies to all mobile devices) */
-@media (max-width: 767px) {
-  .container {
-    padding: 0 0.75rem;
+/* 超大屏 */
+@media (min-width: 1920px) {
+  .main-container {
+    padding: 3rem 8vw;
   }
 
-  /* Hero Section */
   .hero-content {
-    padding: 1.5rem 0;
+    max-width: 1600px;
+  }
+}
+
+/* 大屏桌面 */
+@media (min-width: 1200px) {
+  .main-container {
+    padding: 2.5rem 6vw;
+  }
+}
+
+/* 平板 */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .main-container {
+    padding: 2rem 4vw;
   }
 
-  .hero-title {
-    font-size: 1.75rem;
-    line-height: 1.2;
-    margin-bottom: 0.75rem;
+  .hero-stats {
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 
-  .hero-subtitle {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+  .stat-divider {
+    display: none; /* 在平板上隐藏分隔线 */
+  }
+}
+
+/* 手机 */
+@media (max-width: 767px) {
+  .main-container {
+    padding: 1.5rem 3vw;
   }
 
   .hero-stats {
     flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
+    gap: 1.5rem;
+    margin-top: 2rem;
   }
 
   .stat-item {
     width: 100%;
-    padding: 0.5rem;
-  }
-
-  .stat-number {
-    font-size: 1.5rem;
+    max-width: 300px;
   }
 
   .stat-divider {
-    width: 100%;
+    width: 60%;
     height: 1px;
-    transform: none;
-    margin: 0.25rem 0;
+    margin: 0.75rem auto;
+    background: linear-gradient(to right, transparent, #475569, transparent);
   }
 
-  /* Featured Sports */
-  .sports-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    padding: 0 0.5rem;
-  }
-
-  .sport-card {
-    width: 100%;
-    margin: 0;
-    text-align: center;
-  }
-
-  /* Connection Banner */
   .connection-banner {
-    margin: 0 -0.75rem 1rem;
-    border-radius: 0;
+    margin: 0 -3vw 1.5rem -3vw;
+    padding: 1.5rem 3vw;
   }
 
   .banner-content {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
   }
 
   .banner-icon-text {
     flex-direction: column;
     align-items: center;
-    margin-bottom: 0.75rem;
-  }
-
-  .banner-text {
-    margin-left: 0;
-    margin-top: 0.5rem;
+    gap: 1rem;
   }
 }
 
-/* Small Mobile Devices (iPhone SE, Samsung Galaxy Fold, etc.) */
-@media (max-width: 374px) {
-  .hero-title {
-    font-size: 1.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .stat-number {
-    font-size: 1.25rem;
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-  }
-}
-
-/* Medium Mobile Devices (Most modern phones) */
-@media (min-width: 375px) and (max-width: 428px) {
-  /* iPhone 12/13/14 Pro Max, Plus models */
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-}
-
-/* Large Mobile Devices (Phablets) */
-@media (min-width: 429px) and (max-width: 767px) {
-  .hero-title {
-    font-size: 2.25rem;
+/* 小屏手机 */
+@media (max-width: 480px) {
+  .main-container {
+    padding: 1rem 4vw;
   }
 
   .hero-stats {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 1rem;
   }
 
-  .stat-item {
-    width: auto;
-    padding: 0 1rem;
+  .connection-banner {
+    margin: 0 -4vw 1rem -4vw;
+    padding: 1rem 4vw;
+  }
+}
+
+/* 横屏优化 */
+@media (max-height: 600px) and (orientation: landscape) {
+  .hero-content {
+    padding: clamp(2rem, 5vh, 4rem) 0;
   }
 
-  .stat-divider {
-    display: none;
+  .hero-stats {
+    margin-top: 1rem;
+  }
+
+  .main-container {
+    padding: 1rem 5vw;
   }
 }
 </style>
 
-<!--
-  ============================================
-  全局 CSS 文件 (创建 src/assets/global.css)
-  ============================================
-
-  将下面的CSS放到单独的全局CSS文件中，这样不会影响其他页面：
--->
-
 <style>
-/* 全局最小样式 - 只设置必要的基础样式 */
+/* 全局重置 - 确保没有默认边距影响全屏显示 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 设置全局浅色背景 */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* 防止水平滚动条 */
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
   background-color: #f8f9fa;
   color: #333;
+  font-size: clamp(14px, 2vw, 18px); /* 响应式基础字体 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* 只保留必要的CSS变量给其他组件使用 */
+/* 移除Vue应用的默认边距 */
+#app {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* CSS变量保持不变 */
 :root {
-  /* Primary Colors */
   --primary-50: #f0f9ff;
   --primary-100: #e0f2fe;
   --primary-200: #bae6fd;
@@ -727,7 +580,6 @@ body {
   --primary-800: #075985;
   --primary-900: #0c4a6e;
 
-  /* Accent Colors */
   --accent-50: #fff7ed;
   --accent-100: #ffedd5;
   --accent-200: #fed7aa;
@@ -737,7 +589,6 @@ body {
   --accent-600: #ea580c;
   --accent-700: #c2410c;
 
-  /* Status Colors */
   --success-400: #4ade80;
   --success-500: #22c55e;
   --success-600: #16a34a;
@@ -747,7 +598,6 @@ body {
   --error-500: #ef4444;
   --error-600: #dc2626;
 
-  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -756,140 +606,39 @@ body {
   --space-8: 2rem;
   --space-12: 3rem;
 
-  /* Border Radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
 
-  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
-  /* Transitions */
   --transition-fast: 0.15s ease-out;
   --transition-normal: 0.25s ease-out;
 }
 
-/* =============
-   Responsive
-============== */
-/* ============================================
-   Tablet Responsive Styles (768px - 1024px)
-   - iPad Mini, iPad Air, etc.
-============================================ */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .hero-content {
-    padding: 2.5rem 1.5rem;
-  }
-
-  .hero-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: 1rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.1rem;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-stats {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-
-  .stat-item {
-    min-width: 120px;
-  }
-
-  .stat-number {
-    font-size: 1.75rem;
-  }
-
-  .stat-label {
-    font-size: 0.9rem;
-  }
-
-  .stat-divider {
-    display: none;
-  }
-
-  .sports-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    padding: 0 1rem;
-  }
-
-  .sport-card {
-    width: 100%;
-    max-width: none;
-    font-size: 1.1rem;
-    padding: 1rem;
-  }
-
-  .tab-content {
-    padding: 0 1rem;
-    max-width: 100%;
-    margin: 0 auto;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-/* ============================================
-   Small Mobile Landscape & Special Cases
-   - For landscape mode on small devices
-============================================ */
-@media (max-height: 480px) and (orientation: landscape) {
-  .hero-content {
-    padding: 1rem 0;
-  }
-
-  .hero-title {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-
-  .hero-stats {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .stat-item {
-    min-width: 100px;
-  }
-
-  .stat-number {
-    font-size: 1.25rem;
-  }
-
-  .stat-label {
-    font-size: 0.7rem;
-  }
-
-  /* Adjust for Samsung Fold's inner display */
-  @media (width: 717px) and (height: 539px) {
-    .hero-title {
-      font-size: 1.75rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1rem;
-    }
-  }
+h1, h2, h3, h4, h5, h6 {
+  color: #1f2937;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
+p {
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* 确保所有容器都可以使用全宽 */
+.container, .wrapper, .main {
+  width: 100%;
+  max-width: none;
+}
 </style>
