@@ -174,38 +174,18 @@ export default {
   /* 移除全局背景设置，让其他页面自由设置背景 */
 }
 
-/* Hero Background - 只在这个页面显示 */
+  /* Page Background */
 .hero-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* background: linear-gradient(135deg,
-    #6f8dd1 0%,
-    #7badf3 30%,
-    #ffffff 70%,
-    #e4baac 100%); */
-  background: whitesmoke;
-
-  opacity: 0.95;
+  background: #f8f9fa;  /* Light gray background */
   z-index: -1;
 }
 
-.hero-background::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 20% 80%, #0284c7 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, #ea580c 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, #0369a1 0%, transparent 50%);
-  opacity: 0.3;
-  animation: backgroundPulse 8s ease-in-out infinite;
-}
+/* Remove the animated gradient overlay */
 
 @keyframes backgroundPulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
@@ -725,11 +705,12 @@ export default {
   box-sizing: border-box;
 }
 
-/* 移除body的全局背景设置，让每个页面自由设置 */
+/* 设置全局浅色背景 */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
-  /* 不设置background，让每个页面/组件自己控制 */
+  background-color: #f8f9fa;
+  color: #333;
 }
 
 /* 只保留必要的CSS变量给其他组件使用 */
