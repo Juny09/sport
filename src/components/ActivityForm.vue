@@ -328,10 +328,11 @@
             class="nav-btn primary"
             :disabled="!canProceed"
           >
-            Next
+
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
             </svg>
+            Next
           </button>
 
           <button
@@ -580,7 +581,6 @@ export default {
 </script>
 
 <style scoped>
-
 .activity-form-container {
   max-width: 800px;
   margin: 0 auto;
@@ -774,14 +774,13 @@ select.form-input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-
   /* 确保有足够的右边距给自定义箭头 */
   padding-right: calc(var(--space-4) + 20px);
+}
 
-  /* 隐藏 IE/Edge 的箭头 */
-  &::-ms-expand {
-    display: none;
-  }
+/* 隐藏 IE/Edge 的箭头 */
+select.form-input::-ms-expand {
+  display: none;
 }
 
 .form-input:focus,
@@ -1152,7 +1151,11 @@ select.form-input {
   left: 100%;
 }
 
-/* Responsive Design */
+/* ============================================
+   RESPONSIVE DESIGN - IPHONE 优化
+============================================ */
+
+/* iPad 和大屏平板 */
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -1160,14 +1163,44 @@ select.form-input {
 
   .nav-buttons {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* 统一所有导航按钮尺寸 */
+  .nav-btn {
+    padding: 0.5rem 0.875rem !important;
+    font-size: 0.8125rem !important;
+    min-height: 36px !important;
+  }
+
+  .add-tip-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    min-height: 36px;
+  }
+
+  /* 减小表单输入框 */
+  .form-input,
+  .form-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  /* 减小表单标签 */
+  .form-label {
+    font-size: 0.8125rem;
+    margin-bottom: 0.375rem;
   }
 
   .difficulty-selector {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .difficulty-option {
     min-width: auto;
+    padding: 0.5rem;
+    font-size: 0.8125rem;
   }
 
   .summary-content {
@@ -1175,13 +1208,244 @@ select.form-input {
   }
 
   .form-content {
-    padding: var(--space-4);
+    padding: 0.875rem;
+  }
+
+  /* 减小进度指示器 */
+  .progress-step {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+
+  .progress-line {
+    width: 35px;
+  }
+
+  .progress-labels {
+    gap: 35px;
+  }
+
+  .progress-label {
+    font-size: 0.6875rem;
   }
 }
 
-@media (max-width: 480px) {
+/* iPhone 标准尺寸 (375px 及以下) */
+@media (max-width: 375px) {
   .tip-input-group {
     flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  /* 更紧凑的按钮尺寸 */
+  .nav-btn {
+    padding: 0.4375rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    min-height: 32px !important;
+  }
+
+  .add-tip-btn {
+    padding: 0.4375rem 0.625rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+  }
+
+  /* 紧凑的输入框 */
+  .form-input,
+  .form-select {
+    padding: 0.4375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  /* 减小容器内边距 */
+  .form-content {
+    padding: 0.75rem;
+  }
+
+  .activity-summary {
+    padding: 0.75rem;
+  }
+
+  /* 减小表单组间距 */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  /* 紧凑的提示项目 */
+  .tip-item {
+    padding: 0.5rem;
+  }
+
+  .tip-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.625rem;
+  }
+
+  .tip-text {
+    font-size: 0.75rem;
+  }
+
+  .remove-tip-btn {
+    padding: 0.25rem;
+    width: 24px;
+    height: 24px;
+  }
+
+  /* 减小难度选择器 */
+  .difficulty-option {
+    padding: 0.4375rem;
+  }
+
+  .difficulty-label {
+    font-size: 0.75rem;
+  }
+
+  /* 紧凑的摘要 */
+  .summary-item {
+    padding: 0.375rem 0;
+    font-size: 0.75rem;
+  }
+
+  /* 减小进度指示器 */
+  .progress-step {
+    width: 20px;
+    height: 20px;
+    font-size: 0.625rem;
+  }
+
+  .progress-line {
+    width: 25px;
+  }
+
+  .progress-labels {
+    gap: 25px;
+  }
+
+  .progress-label {
+    font-size: 0.625rem;
   }
 }
+
+/* iPhone SE 和非常小的屏幕 (320px 及以下) */
+@media (max-width: 320px) {
+  /* 最紧凑的按钮设计 */
+  .nav-btn {
+    padding: 0.375rem 0.625rem !important;
+    font-size: 0.6875rem !important;
+    min-height: 30px !important;
+  }
+
+  .add-tip-btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.6875rem;
+    min-height: 30px;
+  }
+
+  /* 最小的输入框 */
+  .form-input,
+  .form-select {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.6875rem;
+  }
+
+  /* 最小的容器内边距 */
+  .form-content {
+    padding: 0.5rem;
+  }
+
+  .activity-summary {
+    padding: 0.5rem;
+  }
+
+  /* 最小的字体 */
+  .form-label {
+    font-size: 0.75rem;
+  }
+
+  .step-title {
+    font-size: 1rem;
+  }
+
+  .step-description {
+    font-size: 0.75rem;
+  }
+}
+
+/* iPhone 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .form-header {
+    margin-bottom: 1rem;
+  }
+
+  .form-progress {
+    margin-bottom: 1rem;
+  }
+
+  .step-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-navigation {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* 触摸设备优化 - 确保按钮足够大以便点击 */
+@media (hover: none) and (pointer: coarse) {
+  .nav-btn {
+    min-height: 32px !important;
+    min-width: 60px;
+  }
+
+  .add-tip-btn {
+    min-height: 32px;
+    min-width: 80px;
+  }
+
+  .difficulty-option {
+    min-height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .remove-tip-btn {
+    min-width: 24px;
+    min-height: 24px;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+============================================ */
+.w-3\.5 { width: 0.875rem; }
+.w-4 { width: 1rem; }
+.w-5 { width: 1.25rem; }
+.w-6 { width: 1.5rem; }
+
+.h-3\.5 { height: 0.875rem; }
+.h-4 { height: 1rem; }
+.h-5 { height: 1.25rem; }
+.h-6 { height: 1.5rem; }
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.opacity-25 { opacity: 0.25; }
+.opacity-75 { opacity: 0.75; }
 </style>
