@@ -42,7 +42,6 @@
           <!-- Activity Name -->
           <div class="form-group full-width">
             <label class="form-label required">
-
               Activity Name
             </label>
             <input
@@ -769,6 +768,22 @@ export default {
   backdrop-filter: blur(10px);
 }
 
+/* 专门针对 select 元素隐藏默认箭头 */
+select.form-input {
+  /* 隐藏默认下拉箭头 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* 确保有足够的右边距给自定义箭头 */
+  padding-right: calc(var(--space-4) + 20px);
+
+  /* 隐藏 IE/Edge 的箭头 */
+  &::-ms-expand {
+    display: none;
+  }
+}
+
 .form-input:focus,
 .form-select:focus {
   outline: none;
@@ -814,6 +829,7 @@ export default {
   border-right: 4px solid transparent;
   border-top: 4px solid #000;
   pointer-events: none;
+  z-index: 1;
 }
 
 /* Form Helpers */
